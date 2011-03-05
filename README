@@ -1,0 +1,10 @@
+This is a simple application for doing fun things with movies
+
+The two features I have in mind are:
+
+SIX DEGREES
+    doing a six-degrees-to-kevin-bacon search between to actors/actresses, the algorithm to do that could be kind of cool
+
+WHATSISFACE
+    you know the guy, he's been in X, and Y, he might have been in Z...
+    finally, with whatsisface, we will actually know the guy
