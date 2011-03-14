@@ -21,7 +21,6 @@ def _parse_movie_line(line):
 
 def parse_movies(input):
     has_started = False
-    count = 0
     previous_movie = (None, None)
     for line in input:
         if has_started:
@@ -32,10 +31,9 @@ def parse_movies(input):
         else:
             if line.strip() == 'MOVIES LIST':
                 has_started = True
+    input.close()
 
 if __name__ == '__main__':
     file = open('movies.list')
     for name, year in parse_movies(file):
         print name, str(year)
-    file.close()
-
