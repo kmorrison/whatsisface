@@ -1,7 +1,8 @@
 #!/usr/bin/python
 
 import re
-MOVIE_RE = r'(?P<name>.*) (?P<year>\([\?\w/]{4,}\)).*'
+from pprint import pprint
+MOVIE_RE = r'(?P<name>.*) (?P<year>\([\?\d/IVXL]{4,}\)).*'
 
 def _parse_movie_line(line):
     tab_split = line.split('\t')
@@ -33,7 +34,32 @@ def parse_movies(input):
                 has_started = True
     input.close()
 
+def parse_actors(input):
+    has_started = False
+    previous_movie = (None, None)
+    current_actor = None
+    current_actors_movies = []
+    for line in input:
+        if has_started:
+            if not line.strip() and current_actor:
+                yield current_actor, current_actors_movies
+                current_actor = None
+                current_actors_movies = []
+            else:
+                tabline = line.split('\t')
+                actor = tabline[0]
+                if actor and len(tabline) > 1:
+                    current_actor = actor
+                movie_info = tabline[-1].strip()
+                name, year = _parse_movie_line(movie_info)
+                if name and (name, year) != previous_movie:
+                    current_actors_movies.append((name, year))
+                    previous_movie = (name, year)
+        else:
+            if line.strip() == 'THE ACTORS LIST':
+                has_started = True
+    input.close()
+
 if __name__ == '__main__':
     file = open('movies.list')
-    for name, year in parse_movies(file):
-        print name, str(year)
+    file.close()
