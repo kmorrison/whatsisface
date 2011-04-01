@@ -63,6 +63,25 @@ def engine_from_config(config_section):
     metadata = Base.metadata
     metadata.create_all(engine)
     return engine
+    
+class QueryHandler():
+
+    def __init__(self, config_section):
+        db_engine = engine_from_config(config_section)
+        Session = sessionmaker(bind=db_engine)
+        self.session = Session()
+
+    def connected_actors(self, actor):
+        movies = actor.movies
+        connected_actors = {}
+        for movie in movies:
+            movie_actors = movie.actors
+            for movie_actor in movie_actors:
+                connected_actors[movie_actor.name] = movie_actor
+        return connected_actors.values()
+
+    def get_actor(self, actor_name):
+        return self.session.query(Actor).filter(Actor.name==actor_name).one()
 
 def persist_movies(it):
     #get database
